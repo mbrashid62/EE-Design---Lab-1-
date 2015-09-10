@@ -29,17 +29,11 @@ public class Thermometer {
 	private JTextField textField;
 	private JTextField textField_1;
 	private JTextField textField_2;
-<<<<<<< HEAD
     private String targetNumber;
 	private int minTemp;
 	private int maxTemp;
-=======
-	
 	private int userNumber;
 
-	
->>>>>>> branch 'master' of https://github.com/mbrashid62/EE-Design---Lab-1-
-	
 	
 	
 	/**
