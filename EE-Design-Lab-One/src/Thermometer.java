@@ -24,7 +24,10 @@ public class Thermometer {
 	private JTextField textField;
 	private JTextField textField_1;
 	private JTextField textField_2;
+	
+	private int userNumber;
 
+	
 	
 	
 	
