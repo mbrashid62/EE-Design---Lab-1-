@@ -85,7 +85,6 @@ public class Thermometer {
 		JButton btnSave = new JButton("Save");
 		btnSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
 			}
 		});
 		btnSave.setBounds(296, 33, 77, 23);
@@ -112,7 +111,7 @@ public class Thermometer {
 		frame.getContentPane().add(lblMax);
 		
 		textField_1 = new JTextField();
-		textField_1.setBounds(61, 95, 68, 24);
+		textField_1.setBounds(61, 95, 60, 24);
 		frame.getContentPane().add(textField_1);
 		textField_1.setColumns(10);
 		
@@ -127,6 +126,11 @@ public class Thermometer {
 		textField_2.setColumns(10);
 		
 		JButton btnNewButton = new JButton("Save");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+			}
+		});
 		btnNewButton.setBounds(296, 96, 77, 23);
 		frame.getContentPane().add(btnNewButton);
 		
