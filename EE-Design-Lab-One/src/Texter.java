@@ -29,7 +29,7 @@ public class Texter {
 	}
 
 	public void HighTempAlert() {
-		
+
 		params.add(new BasicNameValuePair("Body", "The temperature is now over the max temperature limit !"));
 		MessageFactory messageFactory = client.getAccount().getMessageFactory();
 		try {
@@ -39,9 +39,9 @@ public class Texter {
 			e.printStackTrace();
 		}
 	}
-	
-    public void LowTempAlert() {
-		
+
+	public void LowTempAlert() {
+
 		params.add(new BasicNameValuePair("Body", "The temperature is now below the min temperature limit !"));
 		MessageFactory messageFactory = client.getAccount().getMessageFactory();
 		try {
