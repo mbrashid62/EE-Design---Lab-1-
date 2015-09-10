@@ -28,9 +28,21 @@ public class Texter {
 		number = "+1" + newNumber;
 	}
 
-	public void Alert() {
-		params.add(new BasicNameValuePair("Body", "hahaha"));
-
+	public void HighTempAlert() {
+		
+		params.add(new BasicNameValuePair("Body", "The temperature is now over the max temperature limit !"));
+		MessageFactory messageFactory = client.getAccount().getMessageFactory();
+		try {
+			Message message = messageFactory.create(params);
+		} catch (TwilioRestException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+    public void LowTempAlert() {
+		
+		params.add(new BasicNameValuePair("Body", "The temperature is now below the min temperature limit !"));
 		MessageFactory messageFactory = client.getAccount().getMessageFactory();
 		try {
 			Message message = messageFactory.create(params);
