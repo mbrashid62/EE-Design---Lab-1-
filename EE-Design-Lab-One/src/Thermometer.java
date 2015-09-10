@@ -172,7 +172,7 @@ public class Thermometer {
 		group.add(rdbtnF);
 		
 		JToggleButton tglbtnNewToggleButton = new JToggleButton("LED");
-		tglbtnNewToggleButton.setBounds(309, 295, 67, 23);
+		tglbtnNewToggleButton.setBounds(323, 295, 50, 23);
 		frame.getContentPane().add(tglbtnNewToggleButton);
 		
 		JButton btnNewButton_1 = new JButton("Go");
