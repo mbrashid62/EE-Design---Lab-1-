@@ -2,6 +2,8 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.BorderLayout;
 import java.awt.Font;
 import javax.swing.SwingConstants;
@@ -12,11 +14,14 @@ import javax.swing.JScrollPane;
 import java.awt.Insets;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JRadioButton;
 import javax.swing.JToggleButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class Thermometer {
 
@@ -24,8 +29,9 @@ public class Thermometer {
 	private JTextField textField;
 	private JTextField textField_1;
 	private JTextField textField_2;
-
-	
+    private String targetNumber;
+	private int minTemp;
+	private int maxTemp;
 	
 	
 	/**
@@ -37,6 +43,7 @@ public class Thermometer {
 				try {
 					Thermometer window = new Thermometer();
 					window.frame.setVisible(true);
+					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -60,6 +67,12 @@ public class Thermometer {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
+		JTextArea textArea = new JTextArea();
+		textArea.setEditable(false);
+		textArea.setBounds(52, 155, 261, 221);
+		frame.getContentPane().add(textArea);
+		
+		
 		JLabel lblTextMessageAlert = new JLabel("Text Message Alert");
 		lblTextMessageAlert.setBounds(0, 0, 358, 22);
 		lblTextMessageAlert.setHorizontalAlignment(SwingConstants.CENTER);
@@ -75,13 +88,18 @@ public class Thermometer {
 		frame.getContentPane().add(label);
 		
 		textField = new JTextField();
-		textField.setBounds(107, 33, 179, 22);
+		textField.setBounds(107, 33, 175, 22);
 		frame.getContentPane().add(textField);
 		textField.setColumns(10);
 		
 		JButton btnSave = new JButton("Save");
 		btnSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				if (textField.getText().matches("[0-9]+") && textField.getText().length() > 2) {
+					targetNumber = textField.getText();
+				} else {
+					JOptionPane.showMessageDialog(null,"Tartget number must contains integers only !");
+				}
 			}
 		});
 		btnSave.setBounds(296, 33, 77, 23);
@@ -93,10 +111,6 @@ public class Thermometer {
 		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 14));
 		frame.getContentPane().add(lblNewLabel);
 		
-		JTextArea textArea = new JTextArea();
-		textArea.setBounds(38, 155, 261, 221);
-		frame.getContentPane().add(textArea);
-		
 		JLabel lblNewLabel_1 = new JLabel("Temperature Settings");
 		lblNewLabel_1.setFont(new Font("Tahoma", Font.BOLD, 14));
 		lblNewLabel_1.setBounds(96, 62, 159, 22);
@@ -104,32 +118,43 @@ public class Thermometer {
 		
 		JLabel lblMax = new JLabel("Max:");
 		lblMax.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		lblMax.setBounds(27, 101, 46, 14);
+		lblMax.setBounds(52, 99, 34, 14);
 		frame.getContentPane().add(lblMax);
 		
 		textField_1 = new JTextField();
-		textField_1.setBounds(61, 95, 60, 24);
+		textField_1.setBounds(88, 95, 60, 24);
 		frame.getContentPane().add(textField_1);
 		textField_1.setColumns(10);
 		
 		JLabel lblNewLabel_2 = new JLabel("Min:");
 		lblNewLabel_2.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		lblNewLabel_2.setBounds(158, 101, 46, 14);
+		lblNewLabel_2.setBounds(168, 100, 34, 14);
 		frame.getContentPane().add(lblNewLabel_2);
 		
 		textField_2 = new JTextField();
-		textField_2.setBounds(193, 95, 68, 22);
+		textField_2.setBounds(201, 95, 60, 22);
 		frame.getContentPane().add(textField_2);
 		textField_2.setColumns(10);
 		
 		JButton btnNewButton = new JButton("Save");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				int a = Integer.parseInt(textField_1.getText());
+				int b = Integer.parseInt(textField_2.getText());
+				if(a <= b) {
+					JOptionPane.showMessageDialog(null,"Max Temperature must be bigger than Min Temperature!");
+				} else {
+					maxTemp = a;
+					minTemp = b;
+				}
 				
 			}
 		});
+		System.out.print(targetNumber);
 		btnNewButton.setBounds(296, 96, 77, 23);
 		frame.getContentPane().add(btnNewButton);
+		
+		ButtonGroup group = new ButtonGroup();
 		
 		JRadioButton rdbtnC = new JRadioButton("C \u00BA");
 		rdbtnC.setFont(new Font("Tahoma", Font.PLAIN, 13));
@@ -140,6 +165,9 @@ public class Thermometer {
 		rdbtnF.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		rdbtnF.setBounds(319, 199, 46, 23);
 		frame.getContentPane().add(rdbtnF);
+		
+		group.add(rdbtnC);
+		group.add(rdbtnF);
 		
 		JToggleButton tglbtnNewToggleButton = new JToggleButton("LED");
 		tglbtnNewToggleButton.setBounds(309, 295, 67, 23);
