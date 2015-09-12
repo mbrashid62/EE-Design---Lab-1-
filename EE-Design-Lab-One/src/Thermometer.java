@@ -36,8 +36,9 @@ public class Thermometer {
 	private int minTemp;
 	private int maxTemp;
 	private int userNumber;
+	private TwoWaySerialComm communication;
+	public boolean ongoing;
 
-	
 	
 	/**
 	 * Launch the application.
@@ -185,9 +186,24 @@ public class Thermometer {
 		tglbtnNewToggleButton.setFont(new Font("Tahoma", Font.BOLD, 11));
 		tglbtnNewToggleButton.setForeground(new Color(102, 0, 102));
 		tglbtnNewToggleButton.setBounds(301, 313, 60, 31);
-		frame.getContentPane().add(tglbtnNewToggleButton);
+		frame.getContentPane().add(tglbtnNewToggleButton);		
+        communication = new TwoWaySerialComm();
+        try
+        {
+            communication.connect("COM1");//???????????
+        }
+        catch ( Exception e )
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 		
 		JButton btnNewButton_1 = new JButton("Go");
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+			}
+		});
 		btnNewButton_1.setFont(new Font("Tahoma", Font.BOLD, 11));
 		btnNewButton_1.setBackground(new Color(153, 255, 255));
 		btnNewButton_1.setForeground(new Color(0, 153, 51));
