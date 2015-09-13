@@ -44,6 +44,7 @@ public class Thermometer {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
+		
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -102,7 +103,7 @@ public class Thermometer {
 				if (textField.getText().matches("[0-9]+") && textField.getText().length() > 2) {
 					targetNumber = textField.getText();
 				} else {
-					JOptionPane.showMessageDialog(null,"Tartget number must contains integers only !");
+					JOptionPane.showMessageDialog(null,"Target number must contains integers only !");
 				}
 			}
 		});
