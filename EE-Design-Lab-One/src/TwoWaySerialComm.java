@@ -8,7 +8,12 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public class TwoWaySerialComm
-{
+{  
+	private Thread Reader;
+	private Thread Writer;
+	private InputStream in;
+	private OutputStream out;
+
     public TwoWaySerialComm()
     {
         super();
@@ -30,11 +35,8 @@ public class TwoWaySerialComm
                 SerialPort serialPort = (SerialPort) commPort;
                 serialPort.setSerialPortParams(57600,SerialPort.DATABITS_8,SerialPort.STOPBITS_1,SerialPort.PARITY_NONE);
                 
-                InputStream in = serialPort.getInputStream();
-                OutputStream out = serialPort.getOutputStream();
-                
-                (new Thread(new SerialReader(in))).start();
-                (new Thread(new SerialWriter(out))).start();
+                in = serialPort.getInputStream();
+                out = serialPort.getOutputStream();
 
             }
             else
@@ -43,6 +45,31 @@ public class TwoWaySerialComm
             }
         }     
     }
+    
+    public void StartReading() {
+    	Reader = new Thread(new SerialReader(in));
+    	Reader.start();
+    }
+   	
+	public void StartWriting() {
+		Writer = new Thread(new SerialWriter(out));
+		Writer.start();
+    }
+    
+    public void AllStop() {
+    	Reader = null;
+    	Writer = null;
+    }
+    
+    public void WriterStop() {
+    	Writer = null;
+    }
+    
+    public void PauseReading(long millis) throws InterruptedException {
+    	Reader.sleep(millis);
+    }
+    
+    
     
     /** */
     public static class SerialReader implements Runnable 
@@ -98,5 +125,10 @@ public class TwoWaySerialComm
             }            
         }
     }
+
+	public Integer getTemperature() throws IOException {
+		// TODO Auto-generated method stub
+		return (Integer)in.read();
+	}
     
 }

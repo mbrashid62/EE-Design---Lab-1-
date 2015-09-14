@@ -22,6 +22,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
+import java.util.LinkedList;
+import java.util.Queue;
+
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 import javax.swing.UIManager;
@@ -36,8 +40,10 @@ public class Thermometer {
 	private int minTemp;
 	private int maxTemp;
 	private int userNumber;
+	private boolean onGoing;
+	private boolean isCelsius;
 	private TwoWaySerialComm communication;
-	public boolean ongoing;
+	private Queue<Integer> Tdata;
 
 	
 	/**
@@ -139,6 +145,18 @@ public class Thermometer {
 		textField_2.setBounds(177, 95, 60, 24);
 		frame.getContentPane().add(textField_2);
 		textField_2.setColumns(10);
+		Tdata = new LinkedList<Integer>();
+		
+		communication = new TwoWaySerialComm();
+        try
+        {
+            communication.connect("COM1");//???????????
+        }
+        catch ( Exception e )
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 		
 		JButton btnNewButton = new JButton("Save");
 		btnNewButton.setBackground(new Color(153, 255, 255));
@@ -166,6 +184,11 @@ public class Thermometer {
 		ButtonGroup group = new ButtonGroup();
 		
 		JRadioButton rdbtnC = new JRadioButton("C \u00BA");
+		rdbtnC.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				isCelsius = true;
+			}
+		});
 		rdbtnC.setBackground(new Color(102, 204, 204));
 		rdbtnC.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		rdbtnC.setBounds(301, 170, 46, 23);
@@ -173,6 +196,11 @@ public class Thermometer {
 		frame.getContentPane().add(rdbtnC);
 		
 		JRadioButton rdbtnF = new JRadioButton("F \u00BA");
+		rdbtnF.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				isCelsius = false;
+			}
+		});
 		rdbtnF.setBackground(new Color(102, 204, 204));
 		rdbtnF.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		rdbtnF.setBounds(301, 196, 46, 23);
@@ -182,26 +210,54 @@ public class Thermometer {
 		group.add(rdbtnF);
 		
 		JToggleButton tglbtnNewToggleButton = new JToggleButton("LED");
+		tglbtnNewToggleButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				communication.StartWriting();
+				//send LED on commands
+                communication.WriterStop();
+			}
+		});
 		tglbtnNewToggleButton.setBackground(new Color(255, 255, 255));
 		tglbtnNewToggleButton.setFont(new Font("Tahoma", Font.BOLD, 11));
 		tglbtnNewToggleButton.setForeground(new Color(102, 0, 102));
 		tglbtnNewToggleButton.setBounds(301, 313, 60, 31);
 		frame.getContentPane().add(tglbtnNewToggleButton);		
-        communication = new TwoWaySerialComm();
-        try
-        {
-            communication.connect("COM1");//???????????
-        }
-        catch ( Exception e )
-        {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        
+       
 		
+        JPanel panel = new JPanel();
+		panel.setBounds(10, 155, 285, 217);
+		frame.getContentPane().add(panel);
+		panel.setLayout(null);
+		
+		JTextArea textArea = new JTextArea();
+		textArea.setEditable(false);
+		textArea.setBackground(new Color(204, 255, 153));
+		textArea.setForeground(new Color(51, 102, 204));
+		textArea.setBounds(0, 0, 285, 217);
+		panel.add(textArea);
+		textArea.setFont(new Font("Comic Sans MS", textArea.getFont().getStyle() | Font.ITALIC, textArea.getFont().getSize() + 140));
+        
 		JButton btnNewButton_1 = new JButton("Go");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
+				communication.StartReading();
+				onGoing = true;
+				while(onGoing) {
+					Integer currentTemperature = 0;
+					try {
+						currentTemperature = communication.getTemperature();
+						communication.PauseReading(500);
+					} catch (IOException | InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					if(Tdata.size()==600) {
+						Tdata.remove();
+					}	
+					Tdata.add(currentTemperature);
+					textArea.setText(""+currentTemperature);
+				}
 			}
 		});
 		btnNewButton_1.setFont(new Font("Tahoma", Font.BOLD, 11));
@@ -211,22 +267,19 @@ public class Thermometer {
 		frame.getContentPane().add(btnNewButton_1);
 		
 		JButton btnNewButton_2 = new JButton("Stop");
+		btnNewButton_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				onGoing = false;
+				communication.AllStop();
+				textArea.setText("");
+			}
+		});
 		btnNewButton_2.setBackground(new Color(153, 255, 255));
 		btnNewButton_2.setForeground(new Color(255, 51, 51));
 		btnNewButton_2.setFont(new Font("Tahoma", Font.BOLD, 11));
 		btnNewButton_2.setBounds(193, 387, 89, 23);
 		frame.getContentPane().add(btnNewButton_2);
 		
-		JPanel panel = new JPanel();
-		panel.setBounds(10, 155, 285, 217);
-		frame.getContentPane().add(panel);
-		panel.setLayout(null);
 		
-		JTextArea textArea = new JTextArea();
-		textArea.setBackground(new Color(204, 255, 153));
-		textArea.setForeground(new Color(51, 102, 204));
-		textArea.setBounds(0, 0, 285, 217);
-		panel.add(textArea);
-		textArea.setFont(new Font("Comic Sans MS", textArea.getFont().getStyle() | Font.ITALIC, textArea.getFont().getSize() + 140));
 	}
 }
