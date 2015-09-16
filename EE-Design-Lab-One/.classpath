@@ -6,7 +6,20 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
-	<classpathentry kind="lib" path="lib/RXTXcomm.jar"/>
-	<classpathentry kind="lib" path="lib/twilio-java-sdk-4.5.0-jar-with-dependencies.jar"/>
+	<classpathentry kind="lib" path="lib/RXTXcomm.jar">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="EE-Design-Lab-One"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/twilio-java-sdk-4.5.0-jar-with-dependencies.jar">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="EE-Design-Lab-One"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="//engin.uiowa.edu/stuff/Home/rshid/Downloads/jchart2d-2.2.3.jar">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="EE-Design-Lab-One"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
