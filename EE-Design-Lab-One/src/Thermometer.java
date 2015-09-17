@@ -76,7 +76,7 @@ public class Thermometer {
 		frame = new JFrame();
 		frame.getContentPane().setBackground(new Color(102, 204, 204));
 		frame.getContentPane().setForeground(new Color(0, 0, 0));
-		frame.setBounds(100, 100, 387, 468);
+		frame.setBounds(100, 100, 387, 376);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 
@@ -187,7 +187,7 @@ public class Thermometer {
 		});
 		rdbtnC.setBackground(new Color(102, 204, 204));
 		rdbtnC.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		rdbtnC.setBounds(301, 170, 46, 23);
+		rdbtnC.setBounds(315, 170, 46, 23);
 		rdbtnC.setSelected(true);
 		frame.getContentPane().add(rdbtnC);
 
@@ -199,7 +199,7 @@ public class Thermometer {
 		});
 		rdbtnF.setBackground(new Color(102, 204, 204));
 		rdbtnF.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		rdbtnF.setBounds(301, 196, 46, 23);
+		rdbtnF.setBounds(315, 195, 46, 23);
 		frame.getContentPane().add(rdbtnF);
 
 		group.add(rdbtnC);
@@ -216,22 +216,20 @@ public class Thermometer {
 		tglbtnNewToggleButton.setBackground(new Color(255, 255, 255));
 		tglbtnNewToggleButton.setFont(new Font("Tahoma", Font.BOLD, 11));
 		tglbtnNewToggleButton.setForeground(new Color(102, 0, 102));
-		tglbtnNewToggleButton.setBounds(301, 313, 60, 31);
+		tglbtnNewToggleButton.setBounds(308, 295, 53, 31);
 		frame.getContentPane().add(tglbtnNewToggleButton);
 
 		JPanel panel = new JPanel();
-		panel.setBounds(10, 155, 285, 217);
+		panel.setBounds(10, 155, 299, 135);
 		frame.getContentPane().add(panel);
 		panel.setLayout(null);
-
-		JTextArea textArea = new JTextArea();
-		textArea.setEditable(false);
-		textArea.setBackground(new Color(204, 255, 153));
-		textArea.setForeground(new Color(51, 102, 204));
-		textArea.setBounds(0, 0, 285, 217);
-		panel.add(textArea);
-		textArea.setFont(new Font("Comic Sans MS", textArea.getFont().getStyle() | Font.ITALIC,
-				textArea.getFont().getSize() + 140));
+		
+				JTextArea textArea = new JTextArea();
+				textArea.setBounds(0, 0, 299, 134);
+				panel.add(textArea);
+				textArea.setBackground(new Color(204, 255, 153));
+				textArea.setForeground(new Color(51, 102, 204));
+				textArea.setFont(new Font("Comic Sans MS", Font.ITALIC, 94));
 
 		JButton btnNewButton_1 = new JButton("Go");
 		btnNewButton_1.addActionListener(new ActionListener() {
@@ -258,7 +256,7 @@ public class Thermometer {
 		btnNewButton_1.setFont(new Font("Tahoma", Font.BOLD, 11));
 		btnNewButton_1.setBackground(new Color(153, 255, 255));
 		btnNewButton_1.setForeground(new Color(0, 153, 51));
-		btnNewButton_1.setBounds(30, 387, 89, 23);
+		btnNewButton_1.setBounds(30, 301, 89, 23);
 		frame.getContentPane().add(btnNewButton_1);
 
 		JButton btnNewButton_2 = new JButton("Stop");
@@ -272,7 +270,7 @@ public class Thermometer {
 		btnNewButton_2.setBackground(new Color(153, 255, 255));
 		btnNewButton_2.setForeground(new Color(255, 51, 51));
 		btnNewButton_2.setFont(new Font("Tahoma", Font.BOLD, 11));
-		btnNewButton_2.setBounds(193, 387, 89, 23);
+		btnNewButton_2.setBounds(181, 301, 89, 23);
 		frame.getContentPane().add(btnNewButton_2);
 
 	}
