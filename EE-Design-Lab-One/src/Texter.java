@@ -7,6 +7,10 @@ import com.twilio.sdk.*;
 import com.twilio.sdk.resource.factory.*;
 import com.twilio.sdk.resource.instance.*;
 
+/*
+ * @author: Twilio Auto code service, Yujun Huang
+ */
+
 public class Texter {
 	// Find your Account Sid and Token at twilio.com/user/account
 	private static final String ACCOUNT_SID = "ACfbc403a20db2db2dabe94927071a12c8";

@@ -6,15 +6,9 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-
-import java.awt.BorderLayout;
 import java.awt.Font;
 import javax.swing.SwingConstants;
 import java.awt.Color;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import javax.swing.JScrollPane;
-import java.awt.Insets;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ButtonGroup;
@@ -22,12 +16,12 @@ import javax.swing.JButton;
 import javax.swing.JRadioButton;
 import javax.swing.JToggleButton;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import javax.swing.JPanel;
-import javax.swing.border.TitledBorder;
-import javax.swing.UIManager;
+import javax.swing.event.ChangeEvent;
+
 
 public class Thermometer {
 
@@ -42,7 +36,7 @@ public class Thermometer {
 	private boolean onGoing;
 	private boolean isCelsius;
 	private SerialComm communication;
-	private Queue<Integer> Tdata;
+	private Queue<Double> Tdata;
 
 	/**
 	 * Launch the application.
@@ -143,11 +137,11 @@ public class Thermometer {
 		textField_2.setBounds(177, 95, 60, 24);
 		frame.getContentPane().add(textField_2);
 		textField_2.setColumns(10);
-		Tdata = new LinkedList<Integer>();
+		Tdata = new LinkedList<Double>();
 
 		communication = new SerialComm();
 		try {
-			communication.connect("COM1");// ???????????
+			communication.initialize();// ???????????
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -206,12 +200,16 @@ public class Thermometer {
 		group.add(rdbtnF);
 
 		JToggleButton tglbtnNewToggleButton = new JToggleButton("LED");
-		tglbtnNewToggleButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				communication.StartWriting();
-				// send LED on commands
-				communication.WriterStop();
+		tglbtnNewToggleButton.addItemListener(new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent ev) {
+				if(ev.getStateChange()==ItemEvent.SELECTED){
+			        communication.sendData('L');
+			      } else if(ev.getStateChange()==ItemEvent.DESELECTED){
+			    	 communication.sendData('O');
+			      }	
 			}
+			
 		});
 		tglbtnNewToggleButton.setBackground(new Color(255, 255, 255));
 		tglbtnNewToggleButton.setFont(new Font("Tahoma", Font.BOLD, 11));
@@ -235,22 +233,26 @@ public class Thermometer {
 		JButton btnNewButton_1 = new JButton("Go");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				communication.StartReading();
+				//communication.StartReading();
 				onGoing = true;
+				if(communication.getTemperature()=="Connection Failed") {
+					JOptionPane.showMessageDialog(null, "Serial Communication offline!");
+					onGoing = false;
+				}
 				while (onGoing) {
-					Integer currentTemperature = 0;
-					try {
-						currentTemperature = communication.getTemperature();
-						communication.PauseReading(500);
-					} catch (IOException | InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+					String InputReading = communication.getTemperature();
+					double currentTemp = Double.parseDouble(InputReading);
 					if (Tdata.size() == 300) {
 						Tdata.remove();
 					}
-					Tdata.add(currentTemperature);
-					textArea.setText("" + currentTemperature);
+					Tdata.add(currentTemp);
+					textArea.setText(InputReading);
+					try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 			}
 		});
@@ -264,7 +266,7 @@ public class Thermometer {
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				onGoing = false;
-				communication.AllStop();
+				//communication.AllStop();
 				textArea.setText("");
 			}
 		});

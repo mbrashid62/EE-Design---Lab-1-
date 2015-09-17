@@ -5,10 +5,9 @@ import gnu.io.SerialPortEventListener;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.util.Enumeration;
 
 /**
- * @author ericjbruno
+ * @author Yujun Huang
  */
 public class SerialComm implements SerialPortEventListener {
     SerialPort serialPort = null;
@@ -18,6 +17,7 @@ public class SerialComm implements SerialPortEventListener {
     private String appName;
     private BufferedReader input;
     private OutputStream output;
+    private String inputLine = "";
     
     private static final int TIME_OUT = 1000; // Port open timeout
     private static final int DATA_RATE = 9600; // Arduino serial port
@@ -36,7 +36,7 @@ public class SerialComm implements SerialPortEventListener {
             System.out.println( "Connected on port" + currPortId.getName() );
             
             if (portId == null || serialPort == null) {
-                System.out.println("Oops... Could not connect to Arduino");
+                inputLine = "Connection Failed";
                 return false;
             }
         
@@ -61,11 +61,8 @@ public class SerialComm implements SerialPortEventListener {
         return false;
     }
     
-    private void sendData(char data) {
+    void sendData(char data) {
         try {
-            System.out.println("Sending data: '" + data +"'");
-            
-            // open the streams and send the "y" character
             output = serialPort.getOutputStream();
             output.write( data );
         } 
@@ -89,7 +86,7 @@ public class SerialComm implements SerialPortEventListener {
     // Handle serial port event
     //
     public synchronized void serialEvent(SerialPortEvent oEvent) {
-        //System.out.println("Event received: " + oEvent.toString());
+
         try {
             switch (oEvent.getEventType() ) {
                 case SerialPortEvent.DATA_AVAILABLE: 
@@ -99,11 +96,10 @@ public class SerialComm implements SerialPortEventListener {
                                     serialPort.getInputStream()));
                         
                     }
-                    String inputLine = "";
+                    inputLine = "";
                     for (int i = 0; i < 6; i++) {
                     	inputLine += (char)input.read();
                     }
-                    System.out.println(inputLine);
                     break;
 
                 default:
@@ -114,21 +110,12 @@ public class SerialComm implements SerialPortEventListener {
             System.err.println(e.toString());
         }
     }
+    public String getTemperature() {
+    	return inputLine;
+    }
 
     public SerialComm() {
         appName = getClass().getName();
-    }
-    
-    public static void main(String[] args) throws Exception {
-        SerialComm test = new SerialComm();
-        if ( test.initialize() ) {
-            test.sendData('T');
-            try { Thread.sleep(2000); } catch (InterruptedException ie) {}
-           
-            test.close();
-        }
-        // Wait 5 seconds then shutdown
-        try { Thread.sleep(2000); } catch (InterruptedException ie) {}
     }
 }
 
