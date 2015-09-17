@@ -41,7 +41,7 @@ public class Thermometer {
 	private int userNumber;
 	private boolean onGoing;
 	private boolean isCelsius;
-	private TwoWaySerialComm communication;
+	private SerialComm communication;
 	private Queue<Integer> Tdata;
 
 	/**
@@ -145,7 +145,7 @@ public class Thermometer {
 		textField_2.setColumns(10);
 		Tdata = new LinkedList<Integer>();
 
-		communication = new TwoWaySerialComm();
+		communication = new SerialComm();
 		try {
 			communication.connect("COM1");// ???????????
 		} catch (Exception e) {
@@ -187,7 +187,7 @@ public class Thermometer {
 		});
 		rdbtnC.setBackground(new Color(102, 204, 204));
 		rdbtnC.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		rdbtnC.setBounds(315, 170, 46, 23);
+		rdbtnC.setBounds(315, 192, 46, 23);
 		rdbtnC.setSelected(true);
 		frame.getContentPane().add(rdbtnC);
 
@@ -199,7 +199,7 @@ public class Thermometer {
 		});
 		rdbtnF.setBackground(new Color(102, 204, 204));
 		rdbtnF.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		rdbtnF.setBounds(315, 195, 46, 23);
+		rdbtnF.setBounds(315, 239, 46, 23);
 		frame.getContentPane().add(rdbtnF);
 
 		group.add(rdbtnC);
@@ -216,7 +216,7 @@ public class Thermometer {
 		tglbtnNewToggleButton.setBackground(new Color(255, 255, 255));
 		tglbtnNewToggleButton.setFont(new Font("Tahoma", Font.BOLD, 11));
 		tglbtnNewToggleButton.setForeground(new Color(102, 0, 102));
-		tglbtnNewToggleButton.setBounds(308, 295, 53, 31);
+		tglbtnNewToggleButton.setBounds(298, 295, 63, 31);
 		frame.getContentPane().add(tglbtnNewToggleButton);
 
 		JPanel panel = new JPanel();
@@ -225,6 +225,7 @@ public class Thermometer {
 		panel.setLayout(null);
 		
 				JTextArea textArea = new JTextArea();
+				textArea.setEditable(false);
 				textArea.setBounds(0, 0, 299, 134);
 				panel.add(textArea);
 				textArea.setBackground(new Color(204, 255, 153));
@@ -245,7 +246,7 @@ public class Thermometer {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					if (Tdata.size() == 600) {
+					if (Tdata.size() == 300) {
 						Tdata.remove();
 					}
 					Tdata.add(currentTemperature);
