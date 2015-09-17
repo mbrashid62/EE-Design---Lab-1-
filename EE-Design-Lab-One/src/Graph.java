@@ -30,7 +30,7 @@ public class Graph {
 
     	
         Graph myDemo = new Graph();
-        myDemo.staticDemo();
+//        myDemo.staticDemo();
         myDemo.dynamicDemo();
 
         Runtime.getRuntime().addShutdownHook(new Thread() {
@@ -47,52 +47,52 @@ public class Graph {
         });
     }
 
-    private void staticDemo() {
-        // Create a chart:
-        staticChart = new Chart2D();
-
-        // Create an ITrace:
-        ITrace2D trace = new Trace2DSimple();
-        // color it red
-        trace.setColor(Color.RED);
-        // give it a name to display
-        trace.setName("Static Demo");
-
-        // make it colorful
-        staticChart.setBackground(Color.WHITE);
-        staticChart.setForeground(Color.BLUE);
-        staticChart.setGridColor(Color.GREEN);
-
-        // turn on grids along both axes
-        IAxis axisX = staticChart.getAxisX();
-        axisX.setPaintGrid(true);
-        IAxis axisY = staticChart.getAxisY();
-        axisY.setPaintGrid(true);
-
-        // Add all points, as it is static:
-        Random random = new Random();
-        for (int i=100; i>=0; i--) {
-            trace.addPoint(i, random.nextDouble()*10.0+i);
-        }
-        // Add the trace to the chart:
-        staticChart.addTrace(trace);
-
-        // Create a frame.
-        JFrame frame = new JFrame("MinimalStaticChart");
-        // add the chart to the frame:
-        frame.getContentPane().add(staticChart);
-        frame.setSize(600, 400);
-        // the program is terminated if one of the windows is closed 
-        frame.addWindowListener(
-            new WindowAdapter() {
-                public void windowClosing (WindowEvent e) {
-                    System.exit(0);
-                }
-            }
-        );
-        // Make it visible
-        frame.setVisible(true);
-    }
+//    private void staticDemo() {
+//        // Create a chart:
+//        staticChart = new Chart2D();
+//
+//        // Create an ITrace:
+//        ITrace2D trace = new Trace2DSimple();
+//        // color it red
+//        trace.setColor(Color.RED);
+//        // give it a name to display
+//        trace.setName("Static Demo");
+//
+//        // make it colorful
+//        staticChart.setBackground(Color.WHITE);
+//        staticChart.setForeground(Color.BLUE);
+//        staticChart.setGridColor(Color.GREEN);
+//
+//        // turn on grids along both axes
+//        IAxis axisX = staticChart.getAxisX();
+//        axisX.setPaintGrid(true);
+//        IAxis axisY = staticChart.getAxisY();
+//        axisY.setPaintGrid(true);
+//
+//        // Add all points, as it is static:
+//        Random random = new Random();
+//        for (int i=100; i>=0; i--) {
+//            trace.addPoint(i, random.nextDouble()*10.0+i);
+//        }
+//        // Add the trace to the chart:
+//        staticChart.addTrace(trace);
+//
+//        // Create a frame.
+//        JFrame frame = new JFrame("MinimalStaticChart");
+//        // add the chart to the frame:
+//        frame.getContentPane().add(staticChart);
+//        frame.setSize(600, 400);
+//        // the program is terminated if one of the windows is closed 
+//        frame.addWindowListener(
+//            new WindowAdapter() {
+//                public void windowClosing (WindowEvent e) {
+//                    System.exit(0);
+//                }
+//            }
+//        );
+//        // Make it visible
+//        frame.setVisible(true);
+//    }
 
     private void dynamicDemo() {
         // Create a chart:
@@ -100,13 +100,16 @@ public class Graph {
         // Create an ITrace:
         // Note that dynamic charts need limited amount of values!!!
         ITrace2D trace = new Trace2DLtd(200);
+        
+        //iTrace2D implementation will notify chart 2D instance about changes 
+        
         trace.setColor(Color.RED);
-        trace.setName("Dynamic Demo");
+        trace.setName("Temperature");
 
         // Add the trace to the chart:
         chart.addTrace(trace);
 
-        chart.setBackground(Color.LIGHT_GRAY);
+        chart.setBackground(Color.WHITE);
         chart.setForeground(Color.BLUE);
         chart.setGridColor(Color.GREEN);
 
@@ -116,7 +119,7 @@ public class Graph {
         axisY.setPaintGrid(true);
 
         // Create a frame.
-        JFrame frame = new JFrame("MinimalDynamicChart");
+        JFrame frame = new JFrame("Real Time Temperature Chart");
         // add the chart to the frame:
         frame.getContentPane().add(chart);
         frame.setSize(600, 400);
@@ -131,8 +134,8 @@ public class Graph {
         );
         // Make it visible
         frame.setVisible(true);
-        // Every 50 milliseconds a new value is collected.
-        ADataCollector collector = new RandomDataCollectorTimeStamped(trace, 50);
+        // Every 1000 milliseconds a new value is collected.
+        ADataCollector collector = new RandomDataCollectorTimeStamped(trace, 1000);
         // Start an internal Thread that adds the values:
         collector.start();
     }
