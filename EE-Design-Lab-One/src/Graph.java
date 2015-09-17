@@ -24,6 +24,11 @@ public class Graph {
     private static Chart2D staticChart;
 
     public static void main (String[] args) {
+    	
+    	String path = System.getProperty("user.dir");
+    	System.out.println("path: " + path);
+
+    	
         Graph myDemo = new Graph();
         myDemo.staticDemo();
         myDemo.dynamicDemo();
