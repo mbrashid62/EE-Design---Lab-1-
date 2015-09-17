@@ -141,7 +141,10 @@ public class Thermometer {
 
 		communication = new SerialComm();
 		try {
-			communication.initialize();// ???????????
+			boolean connection = communication.initialize();
+			if(!connection) {
+				JOptionPane.showMessageDialog(null, "Serial Communication offline!");
+			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -206,7 +209,7 @@ public class Thermometer {
 				if(ev.getStateChange()==ItemEvent.SELECTED){
 			        communication.sendData('L');
 			      } else if(ev.getStateChange()==ItemEvent.DESELECTED){
-			    	 communication.sendData('O');
+			    	communication.sendData('O');
 			      }	
 			}
 			
@@ -234,12 +237,9 @@ public class Thermometer {
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				//communication.StartReading();
-				onGoing = true;
-				if(communication.getTemperature()=="Connection Failed") {
-					JOptionPane.showMessageDialog(null, "Serial Communication offline!");
-					onGoing = false;
-				}
+				onGoing = true;	
 				while (onGoing) {
+					communication.sendData('T');
 					String InputReading = communication.getTemperature();
 					double currentTemp = Double.parseDouble(InputReading);
 					if (Tdata.size() == 300) {

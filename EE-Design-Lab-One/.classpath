@@ -16,11 +16,6 @@
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="EE-Design-Lab-One"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="//engin.uiowa.edu/stuff/Home/rshid/Downloads/jchart2d-2.2.3.jar">
-		<attributes>
-			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="EE-Design-Lab-One"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="lib" path="lib/jchart2d-2.2.3.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
