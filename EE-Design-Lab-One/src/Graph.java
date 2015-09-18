@@ -13,8 +13,10 @@ import info.monitorenter.gui.chart.IAxis;
 import info.monitorenter.gui.chart.ITrace2D;
 import info.monitorenter.gui.chart.io.ADataCollector;
 import info.monitorenter.gui.chart.io.RandomDataCollectorTimeStamped;
+import info.monitorenter.gui.chart.rangepolicies.RangePolicyFixedViewport;
 import info.monitorenter.gui.chart.traces.Trace2DLtd;
 import info.monitorenter.gui.chart.traces.Trace2DSimple;
+import info.monitorenter.util.Range;
 
 
 
@@ -102,7 +104,6 @@ public class Graph {
         ITrace2D trace = new Trace2DLtd(200);
         
         //iTrace2D implementation will notify chart 2D instance about changes 
-        
         trace.setColor(Color.RED);
         trace.setName("Temperature");
 
@@ -114,9 +115,21 @@ public class Graph {
         chart.setGridColor(Color.GREEN);
 
         IAxis axisX = chart.getAxisX();
+       
         axisX.setPaintGrid(true);
         IAxis axisY = chart.getAxisY();
         axisY.setPaintGrid(true);
+        
+        //instantiate range instance for degrees Celsius
+        Range yRange = new Range(-10.0, 63.0);
+        //create policy for y axis range - we want a fixed viewport
+        RangePolicyFixedViewport policy = new RangePolicyFixedViewport(yRange);
+        //set policy to axix obj
+        axisY.setRangePolicy(policy);
+        
+        //print to check
+//        System.out.println("Result of getRange(): " + axisY.getRange());
+        
 
         // Create a frame.
         JFrame frame = new JFrame("Real Time Temperature Chart");
@@ -134,9 +147,15 @@ public class Graph {
         );
         // Make it visible
         frame.setVisible(true);
-        // Every 1000 milliseconds a new value is collected.
+        // Every 1000 milliseconds a new random value is collected.
         ADataCollector collector = new RandomDataCollectorTimeStamped(trace, 1000);
+        
+        //TODO: implement this function 
+        ADataCollector tempCollector = new tempDataCollectorTimeStamped(trace, 1000);
+        
+        tempCollector.start();	
+        
         // Start an internal Thread that adds the values:
-        collector.start();
+//        collector.start();
     }
 }
