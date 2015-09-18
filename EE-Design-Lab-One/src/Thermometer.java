@@ -143,6 +143,7 @@ public class Thermometer {
 		communication = new SerialComm();
 		try {
 			connection = communication.initialize();
+			//display graph of old data
 			if(!connection) {
 				JOptionPane.showMessageDialog(null, "Serial Communication offline! re-connecting...");
 			}
