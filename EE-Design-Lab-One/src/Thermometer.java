@@ -38,6 +38,8 @@ public class Thermometer {
 	private SerialComm communication;
 	private Queue<Double> Tdata;
 	private boolean connection;
+	
+	private Graph tempGraph;
 
 	/**
 	 * Launch the application.
@@ -61,13 +63,24 @@ public class Thermometer {
 	 * Create the application.
 	 */
 	public Thermometer() {
-		initialize();
+		initializeGui();
+		initializeGraph();
+	}
+
+	private void initializeGraph() {
+        tempGraph = new Graph();
+        tempGraph.dynamicChartInit();
+       
+	}
+	
+	private void pauseGraph(){
+		tempGraph.stopCollector();
 	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize() {
+	private void initializeGui() {
 		frame = new JFrame();
 		frame.getContentPane().setBackground(new Color(102, 204, 204));
 		frame.getContentPane().setForeground(new Color(0, 0, 0));
