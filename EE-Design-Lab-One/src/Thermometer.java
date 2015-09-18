@@ -37,6 +37,7 @@ public class Thermometer {
 	private boolean isCelsius;
 	private SerialComm communication;
 	private Queue<Double> Tdata;
+	private boolean connection;
 
 	/**
 	 * Launch the application.
@@ -141,10 +142,14 @@ public class Thermometer {
 
 		communication = new SerialComm();
 		try {
-			boolean connection = communication.initialize();
+			connection = communication.initialize();
 			if(!connection) {
-				JOptionPane.showMessageDialog(null, "Serial Communication offline!");
+				JOptionPane.showMessageDialog(null, "Serial Communication offline! re-connecting...");
 			}
+			while(!connection) {
+				connection = communication.initialize();
+			}
+			JOptionPane.showMessageDialog(null, "Serial Communication online!");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -239,6 +244,12 @@ public class Thermometer {
 				//communication.StartReading();
 				onGoing = true;	
 				while (onGoing) {
+					if(!connection) {
+						JOptionPane.showMessageDialog(null, "Serial Communication offline! re-connecting...");
+					}
+					while(!connection) {
+						connection = communication.initialize();
+					}
 					communication.sendData('T');
 					String InputReading = communication.getTemperature();
 					double currentTemp = Double.parseDouble(InputReading);
