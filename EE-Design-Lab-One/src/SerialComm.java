@@ -11,7 +11,6 @@ import java.io.OutputStream;
  */
 public class SerialComm implements SerialPortEventListener {
 	SerialPort serialPort = null;
-
 	private static final String PORT_NAME = "COM3";
 
 	private String appName;
@@ -59,8 +58,6 @@ public class SerialComm implements SerialPortEventListener {
 			System.exit(0);
 		}
 	}
-
-	//
 	// This should be called when you stop using the port
 	//
 	public synchronized void close() {
