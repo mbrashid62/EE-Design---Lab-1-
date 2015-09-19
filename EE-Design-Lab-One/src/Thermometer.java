@@ -35,6 +35,7 @@ public class Thermometer {
 	private int userNumber;
 	private boolean onGoing;
 	private boolean isCelsius;
+	private boolean hasGraphBeenInit;
 	private SerialComm communication;
 	private Queue<Double> Tdata;
 	private boolean connection;
@@ -68,9 +69,6 @@ public class Thermometer {
 	}
 
 	private void initializeGraph() {
-        tempGraph = new Graph();
-        tempGraph.dynamicChartInit();
-       
 	}
 	
 	private void pauseGraph(){
@@ -81,7 +79,7 @@ public class Thermometer {
 	 * Initialize the contents of the frame.
 	 */
 	private void initializeGui() {
-		
+		hasGraphBeenInit = false;
 		frame = new JFrame();
 		frame.getContentPane().setBackground(new Color(102, 204, 204));
 		frame.getContentPane().setForeground(new Color(0, 0, 0));
@@ -155,7 +153,7 @@ public class Thermometer {
 		Tdata = new LinkedList<Double>();
 
 		communication = new SerialComm();
-		try {
+		/*try {
 			connection = communication.initialize();
 			//display graph of old data
 			if(!connection) {
@@ -168,7 +166,7 @@ public class Thermometer {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
 
 		JButton btnNewButton = new JButton("Save");
 		btnNewButton.setBackground(new Color(153, 255, 255));
@@ -261,29 +259,38 @@ public class Thermometer {
 			public void actionPerformed(ActionEvent arg0) {
 				//communication.StartReading();
 				onGoing = true;	
-				tempGraph.startCollector();
-				while (onGoing) {
-					if(!connection) {
-						JOptionPane.showMessageDialog(null, "Serial Communication offline! re-connecting...");
-					}
-					while(!connection) {
-						connection = communication.initialize();
-					}
-					communication.sendData('T');
-					String InputReading = communication.getTemperature();
-					double currentTemp = Double.parseDouble(InputReading);
-					if (Tdata.size() == 300) {
-						Tdata.remove();
-					}
-					Tdata.add(currentTemp);
-					textArea.setText(InputReading);
-					try {
-						Thread.sleep(1000);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+				
+				if(!hasGraphBeenInit){
+			        tempGraph = new Graph();       
+			        tempGraph.dynamicChartInit();
+			        hasGraphBeenInit = true;
+				}
+				else{
+					tempGraph.startCollector();
+					while (onGoing) {
+						if(!connection) {
+							JOptionPane.showMessageDialog(null, "Serial Communication offline! re-connecting...");
+						}
+						while(!connection) {
+							connection = communication.initialize();
+						}
+						communication.sendData('T');
+						String InputReading = communication.getTemperature();
+						double currentTemp = Double.parseDouble(InputReading);
+						if (Tdata.size() == 300) {
+							Tdata.remove();
+						}
+						Tdata.add(currentTemp);
+						textArea.setText(InputReading);
+						try {
+							Thread.sleep(1000);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 					}
 				}
+				
 			}
 		});
 		btnNewButton_1.setFont(new Font("Tahoma", Font.BOLD, 11));

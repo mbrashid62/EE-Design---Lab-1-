@@ -56,7 +56,6 @@ public class Graph {
     
     	yPolicy = new RangePolicyFixedViewport();
     	
-    	
     	// Create a frame.
         frame = new JFrame("Real Time Temperature Chart");
         // add the chart to the frame:
