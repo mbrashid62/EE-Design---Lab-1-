@@ -81,6 +81,7 @@ public class Thermometer {
 	 * Initialize the contents of the frame.
 	 */
 	private void initializeGui() {
+		
 		frame = new JFrame();
 		frame.getContentPane().setBackground(new Color(102, 204, 204));
 		frame.getContentPane().setForeground(new Color(0, 0, 0));
@@ -199,6 +200,8 @@ public class Thermometer {
 		rdbtnC.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				isCelsius = true;
+				tempGraph.setAxisCelsius();
+
 			}
 		});
 		rdbtnC.setBackground(new Color(102, 204, 204));
@@ -206,11 +209,12 @@ public class Thermometer {
 		rdbtnC.setBounds(315, 192, 46, 23);
 		rdbtnC.setSelected(true);
 		frame.getContentPane().add(rdbtnC);
-
+		
 		JRadioButton rdbtnF = new JRadioButton("F \u00BA");
 		rdbtnF.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				isCelsius = false;
+				tempGraph.setAxisFarenheit();
 			}
 		});
 		rdbtnF.setBackground(new Color(102, 204, 204));
@@ -257,6 +261,7 @@ public class Thermometer {
 			public void actionPerformed(ActionEvent arg0) {
 				//communication.StartReading();
 				onGoing = true;	
+				tempGraph.startCollector();
 				while (onGoing) {
 					if(!connection) {
 						JOptionPane.showMessageDialog(null, "Serial Communication offline! re-connecting...");
@@ -291,6 +296,7 @@ public class Thermometer {
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				onGoing = false;
+				tempGraph.stopCollector();
 				//communication.AllStop();
 				textArea.setText("");
 			}
