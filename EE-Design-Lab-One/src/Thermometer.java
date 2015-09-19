@@ -8,6 +8,9 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import java.awt.Font;
 import javax.swing.SwingConstants;
+
+import com.twilio.sdk.TwilioRestException;
+
 import java.awt.Color;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -20,7 +23,6 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JPanel;
-import javax.swing.event.ChangeEvent;
 
 
 public class Thermometer {
@@ -30,12 +32,13 @@ public class Thermometer {
 	private JTextField textField_1;
 	private JTextField textField_2;
 	private String targetNumber;
-	private int minTemp;
-	private int maxTemp;
-	private int userNumber;
+	private double minTemp;
+	private double maxTemp;
 	private boolean onGoing;
 	private boolean isCelsius;
 	private boolean hasGraphBeenInit;
+	private Texter Alert;
+	private final String defaultNumber = "+13198559324";
 	private SerialComm communication;
 	private Queue<Double> Tdata;
 	private boolean connection;
@@ -65,20 +68,13 @@ public class Thermometer {
 	 */
 	public Thermometer() {
 		initializeGui();
-		initializeGraph();
-	}
-
-	private void initializeGraph() {
 	}
 	
-	private void pauseGraph(){
-		tempGraph.stopCollector();
-	}
-
 	/**
 	 * Initialize the contents of the frame.
 	 */
 	private void initializeGui() {
+		isCelsius = true;
 		hasGraphBeenInit = false;
 		frame = new JFrame();
 		frame.getContentPane().setBackground(new Color(102, 204, 204));
@@ -106,12 +102,26 @@ public class Thermometer {
 		frame.getContentPane().add(textField);
 		textField.setColumns(10);
 
+		try {
+			Alert = new Texter(defaultNumber);
+		} catch (TwilioRestException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		
 		JButton btnSave = new JButton("Save");
 		btnSave.setBackground(new Color(153, 255, 255));
 		btnSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if (textField.getText().matches("[0-9]+") && textField.getText().length() > 2) {
 					targetNumber = textField.getText();
+					try {
+						Alert = new Texter(targetNumber);
+					} catch (TwilioRestException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				} else {
 					JOptionPane.showMessageDialog(null, "Tartget number must contains integers only !");
 				}
@@ -151,7 +161,7 @@ public class Thermometer {
 		frame.getContentPane().add(textField_2);
 		textField_2.setColumns(10);
 		Tdata = new LinkedList<Double>();
-
+        
 		communication = new SerialComm();
 		/*try {
 			connection = communication.initialize();
@@ -172,8 +182,8 @@ public class Thermometer {
 		btnNewButton.setBackground(new Color(153, 255, 255));
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				int a = Integer.parseInt(textField_1.getText());
-				int b = Integer.parseInt(textField_2.getText());
+				double a = Double.parseDouble(textField_1.getText());
+				double b = Double.parseDouble(textField_2.getText());
 				if (a <= b) {
 					JOptionPane.showMessageDialog(null, "Max Temperature must be bigger than Min Temperature!");
 				} else {
@@ -257,7 +267,6 @@ public class Thermometer {
 		JButton btnNewButton_1 = new JButton("Go");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				//communication.StartReading();
 				onGoing = true;	
 				
 				if(!hasGraphBeenInit){
@@ -277,11 +286,21 @@ public class Thermometer {
 						communication.sendData('T');
 						String InputReading = communication.getTemperature();
 						double currentTemp = Double.parseDouble(InputReading);
+						if(currentTemp < minTemp) {
+							Alert.LowTempAlert();
+						}
+						else if(currentTemp > maxTemp) {
+							Alert.HighTempAlert();
+						}
 						if (Tdata.size() == 300) {
 							Tdata.remove();
 						}
 						Tdata.add(currentTemp);
-						textArea.setText(InputReading);
+						if(isCelsius){
+							textArea.setText(""+currentTemp);
+						}else {
+							textArea.setText(""+CtoF(currentTemp));
+						}			
 						try {
 							Thread.sleep(1000);
 						} catch (InterruptedException e) {
@@ -304,7 +323,6 @@ public class Thermometer {
 			public void actionPerformed(ActionEvent arg0) {
 				onGoing = false;
 				tempGraph.stopCollector();
-				//communication.AllStop();
 				textArea.setText("");
 			}
 		});
@@ -315,4 +333,11 @@ public class Thermometer {
 		frame.getContentPane().add(btnNewButton_2);
 
 	}
+	
+	public double CtoF(double C) {
+		double F = 0;
+		F = 9*C/5+32;
+		return F;
+	}
+	
 }
