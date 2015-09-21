@@ -81,8 +81,8 @@ public class Graph {
     	 //write data to file
 		try {
 
-			System.out.println("About to write data to file.");
-			String content = "This is the content to write into file";
+			System.out.println("Read temp: " + temp);
+			String content = "Test data";
 
 			File file = new File("H://Lab_One/temps/temps.txt");
 

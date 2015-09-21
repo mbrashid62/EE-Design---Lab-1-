@@ -280,12 +280,13 @@ public class Thermometer {
 							connection = communication.initialize();
 						}
 
-						communication.sendData('T');
-
 						String InputReading = communication.getTemperature();
 
 						/*** get temp from arduino **/
 						double currentTemp = Double.parseDouble(InputReading);
+						
+						System.out.println("before sendData()");
+
 						tempGraph.sendData(currentTemp);
 
 						if (currentTemp < minTemp) {
