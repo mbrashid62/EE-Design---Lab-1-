@@ -101,6 +101,8 @@ public class Thermometer {
 		frame.getContentPane().add(textField);
 		textField.setColumns(10);
 
+		minTemp = -10;
+		maxTemp = 63;
 		try {
 			Alert = new Texter(defaultNumber);
 		} catch (TwilioRestException e1) {
@@ -160,15 +162,22 @@ public class Thermometer {
 		textField_2.setColumns(10);
 
 		communication = new SerialComm();
-		/*
-		 * try { connection = communication.initialize(); //display graph of old
-		 * data if(!connection) { JOptionPane.showMessageDialog(null,
-		 * "Serial Communication offline! re-connecting..."); }
-		 * while(!connection) { connection = communication.initialize(); }
-		 * JOptionPane.showMessageDialog(null, "Serial Communication online!");
-		 * } catch (Exception e) { // TODO Auto-generated catch block
-		 * e.printStackTrace(); }
-		 */
+		
+		  try { 
+			  connection = communication.initialize(); //display graph of old data 
+		  
+			  if(!connection) { 
+				  JOptionPane.showMessageDialog(null,
+				  "Serial Communication offline! re-connecting..."); }
+		  
+			  while(!connection) { 
+				  connection = communication.initialize(); 
+				  }
+			  JOptionPane.showMessageDialog(null, "Serial Communication online!");
+		  } 
+		  catch (Exception e) { // TODO Auto-generated catch block
+		  e.printStackTrace(); }
+		 
 
 		JButton btnNewButton = new JButton("Save");
 		btnNewButton.setBackground(new Color(153, 255, 255));
@@ -279,9 +288,18 @@ public class Thermometer {
 						while (!connection) {
 							connection = communication.initialize();
 						}
+						
+						communication.sendData('T');
 
 						String InputReading = communication.getTemperature();
-
+						try {
+							Thread.sleep(1000);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+                        System.out.println("InputReading: " + InputReading);
+                        
 						/*** get temp from arduino **/
 						double currentTemp = Double.parseDouble(InputReading);
 						
@@ -301,14 +319,8 @@ public class Thermometer {
 							textArea.setText("" + CtoF(currentTemp));
 						}
 
-						tempGraph.addDataPoint(currentTemp);
+						
 
-						try {
-							Thread.sleep(1000);
-						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
 					}
 				}
 
