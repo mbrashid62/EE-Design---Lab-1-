@@ -1,6 +1,7 @@
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.Queue;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -24,7 +25,6 @@ import java.awt.event.ItemListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JPanel;
 
-
 public class Thermometer {
 
 	private JFrame frame;
@@ -40,9 +40,8 @@ public class Thermometer {
 	private Texter Alert;
 	private final String defaultNumber = "+13198559324";
 	private SerialComm communication;
-	private Queue<Double> Tdata;
 	private boolean connection;
-	
+
 	private Graph tempGraph;
 
 	/**
@@ -69,7 +68,7 @@ public class Thermometer {
 	public Thermometer() {
 		initializeGui();
 	}
-	
+
 	/**
 	 * Initialize the contents of the frame.
 	 */
@@ -108,8 +107,7 @@ public class Thermometer {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		
-		
+
 		JButton btnSave = new JButton("Save");
 		btnSave.setBackground(new Color(153, 255, 255));
 		btnSave.addActionListener(new ActionListener() {
@@ -160,23 +158,17 @@ public class Thermometer {
 		textField_2.setBounds(177, 95, 60, 24);
 		frame.getContentPane().add(textField_2);
 		textField_2.setColumns(10);
-		Tdata = new LinkedList<Double>();
-        
+
 		communication = new SerialComm();
-		/*try {
-			connection = communication.initialize();
-			//display graph of old data
-			if(!connection) {
-				JOptionPane.showMessageDialog(null, "Serial Communication offline! re-connecting...");
-			}
-			while(!connection) {
-				connection = communication.initialize();
-			}
-			JOptionPane.showMessageDialog(null, "Serial Communication online!");
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
+		/*
+		 * try { connection = communication.initialize(); //display graph of old
+		 * data if(!connection) { JOptionPane.showMessageDialog(null,
+		 * "Serial Communication offline! re-connecting..."); }
+		 * while(!connection) { connection = communication.initialize(); }
+		 * JOptionPane.showMessageDialog(null, "Serial Communication online!");
+		 * } catch (Exception e) { // TODO Auto-generated catch block
+		 * e.printStackTrace(); }
+		 */
 
 		JButton btnNewButton = new JButton("Save");
 		btnNewButton.setBackground(new Color(153, 255, 255));
@@ -217,7 +209,7 @@ public class Thermometer {
 		rdbtnC.setBounds(315, 192, 46, 23);
 		rdbtnC.setSelected(true);
 		frame.getContentPane().add(rdbtnC);
-		
+
 		JRadioButton rdbtnF = new JRadioButton("F \u00BA");
 		rdbtnF.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -237,13 +229,13 @@ public class Thermometer {
 		tglbtnNewToggleButton.addItemListener(new ItemListener() {
 			@Override
 			public void itemStateChanged(ItemEvent ev) {
-				if(ev.getStateChange()==ItemEvent.SELECTED){
-			        communication.sendData('L');
-			      } else if(ev.getStateChange()==ItemEvent.DESELECTED){
-			    	communication.sendData('O');
-			      }	
+				if (ev.getStateChange() == ItemEvent.SELECTED) {
+					communication.sendData('L');
+				} else if (ev.getStateChange() == ItemEvent.DESELECTED) {
+					communication.sendData('O');
+				}
 			}
-			
+
 		});
 		tglbtnNewToggleButton.setBackground(new Color(255, 255, 255));
 		tglbtnNewToggleButton.setFont(new Font("Tahoma", Font.BOLD, 11));
@@ -255,52 +247,61 @@ public class Thermometer {
 		panel.setBounds(10, 155, 299, 135);
 		frame.getContentPane().add(panel);
 		panel.setLayout(null);
-		
-				JTextArea textArea = new JTextArea();
-				textArea.setEditable(false);
-				textArea.setBounds(0, 0, 299, 134);
-				panel.add(textArea);
-				textArea.setBackground(new Color(204, 255, 153));
-				textArea.setForeground(new Color(51, 102, 204));
-				textArea.setFont(new Font("Comic Sans MS", Font.ITALIC, 94));
+
+		JTextArea textArea = new JTextArea();
+		textArea.setEditable(false);
+		textArea.setBounds(0, 0, 299, 134);
+		panel.add(textArea);
+		textArea.setBackground(new Color(204, 255, 153));
+		textArea.setForeground(new Color(51, 102, 204));
+		textArea.setFont(new Font("Comic Sans MS", Font.ITALIC, 94));
 
 		JButton btnNewButton_1 = new JButton("Go");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				onGoing = true;	
-				
-				if(!hasGraphBeenInit){
-			        tempGraph = new Graph();       
-			        tempGraph.dynamicChartInit();
-			        hasGraphBeenInit = true;
+				onGoing = true;
+
+				if (!hasGraphBeenInit) {
+					tempGraph = new Graph();
+					hasGraphBeenInit = true;
+					System.out.println("In first if");
 				}
-				else{
-					tempGraph.startCollector();
+				if (hasGraphBeenInit == true) {
+
+					System.out.println("In here");
+
 					while (onGoing) {
-						if(!connection) {
+
+						if (!connection) {
 							JOptionPane.showMessageDialog(null, "Serial Communication offline! re-connecting...");
 						}
-						while(!connection) {
+
+						while (!connection) {
 							connection = communication.initialize();
 						}
+
 						communication.sendData('T');
+
 						String InputReading = communication.getTemperature();
+
+						/*** get temp from arduino **/
 						double currentTemp = Double.parseDouble(InputReading);
-						if(currentTemp < minTemp) {
+						tempGraph.sendData(currentTemp);
+
+						if (currentTemp < minTemp) {
 							Alert.LowTempAlert();
-						}
-						else if(currentTemp > maxTemp) {
+						} else if (currentTemp > maxTemp) {
 							Alert.HighTempAlert();
 						}
-						if (Tdata.size() == 300) {
-							Tdata.remove();
+
+						if (isCelsius) {
+							textArea.setText("" + currentTemp);
+						} else {
+							textArea.setText("" + CtoF(currentTemp));
 						}
-						Tdata.add(currentTemp);
-						if(isCelsius){
-							textArea.setText(""+currentTemp);
-						}else {
-							textArea.setText(""+CtoF(currentTemp));
-						}			
+
+						tempGraph.addDataPoint(currentTemp);
+
 						try {
 							Thread.sleep(1000);
 						} catch (InterruptedException e) {
@@ -309,7 +310,7 @@ public class Thermometer {
 						}
 					}
 				}
-				
+
 			}
 		});
 		btnNewButton_1.setFont(new Font("Tahoma", Font.BOLD, 11));
@@ -333,11 +334,11 @@ public class Thermometer {
 		frame.getContentPane().add(btnNewButton_2);
 
 	}
-	
+
 	public double CtoF(double C) {
 		double F = 0;
-		F = 9*C/5+32;
+		F = 9 * C / 5 + 32;
 		return F;
 	}
-	
+
 }
