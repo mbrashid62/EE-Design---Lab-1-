@@ -44,7 +44,7 @@ public class Thermometer {
 	private JTextArea textArea;
 	private GoThread collector;
 
-	private Graph tempGraph;
+	//private Graph tempGraph;
 
 	/**
 	 * Launch the application.
@@ -77,9 +77,7 @@ public class Thermometer {
 	private void initializeGui() {
 		JOptionPane.showMessageDialog(null, "Default tartget number: +13198559324\nDefault Min Temperature: -10.0 C \u00BA\nDefault Max Temperature: 63.0 C \u00BA");
 		isCelsius = true;
-	
-		tempGraph = new Graph();
-		//hasGraphBeenInit = false;
+	//	hasGraphBeenInit = false;
 		frame = new JFrame();
 		frame.getContentPane().setBackground(new Color(102, 204, 204));
 		frame.getContentPane().setForeground(new Color(0, 0, 0));
@@ -277,7 +275,19 @@ public class Thermometer {
 				onGoing = true;
 				collector = new GoThread();
 				collector.start();
+			/*	if (!hasGraphBeenInit) {
+					tempGraph = new Graph();
+					hasGraphBeenInit = true;
+				//	System.out.println("In first if");
 				}
+				if (hasGraphBeenInit == true) {
+
+				//	System.out.println("In here");*/
+
+					
+				}
+
+			//}
 		});
 		btnNewButton_1.setFont(new Font("Tahoma", Font.BOLD, 11));
 		btnNewButton_1.setBackground(new Color(153, 255, 255));
@@ -289,6 +299,7 @@ public class Thermometer {
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				onGoing = false;
+//				tempGraph.stopCollector();
 				collector = null;
 				textArea.setText("");
 			}
@@ -309,8 +320,7 @@ public class Thermometer {
 	
 	private class GoThread extends Thread {
 		
-		public GoThread() { 
-			
+		public GoThread() {
 		}
 		
 		public void run() {
@@ -333,13 +343,13 @@ public class Thermometer {
 				try {
 					Thread.sleep(1000);
 				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
 				/*** get temp from arduino **/
 				double currentTemp = Double.parseDouble(InputReading);
-//				System.out.println("Current Temp: " + currentTemp);
-				tempGraph.sendToGraph(currentTemp);
+				
+//						tempGraph.sendData(currentTemp);
 				if(!Alert.isAlerted()) {
 					if (currentTemp < minTemp) {
 						Alert.LowTempAlert();
