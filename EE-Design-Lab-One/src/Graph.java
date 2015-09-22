@@ -10,28 +10,28 @@ import java.io.IOException;
 
 import javax.swing.JFrame;
 
-import info.monitorenter.gui.chart.Chart2D;
-import info.monitorenter.gui.chart.IAxis;
-import info.monitorenter.gui.chart.ITrace2D;
-import info.monitorenter.gui.chart.io.ADataCollector;
-import info.monitorenter.gui.chart.rangepolicies.RangePolicyFixedViewport;
-import info.monitorenter.gui.chart.traces.Trace2DLtd;
-import info.monitorenter.util.Range;
+//import info.monitorenter.gui.chart.Chart2D;
+//import info.monitorenter.gui.chart.IAxis;
+//import info.monitorenter.gui.chart.ITrace2D;
+//import info.monitorenter.gui.chart.io.ADataCollector;
+//import info.monitorenter.gui.chart.rangepolicies.RangePolicyFixedViewport;
+//import info.monitorenter.gui.chart.traces.Trace2DLtd;
+//import info.monitorenter.util.Range;
 
 public class Graph {
 
 	 // must be a static field so the shutdown hook can get at it
-    private static Chart2D staticChart;
-    private Chart2D chart;
-    private ADataCollector tempCollector;
-    private IAxis axisX;
-    private IAxis axisY;
-    
-    private Range yRangeCelsius;
-    private Range yRangeFarenheit;
-    private ITrace2D trace;
-    private JFrame frame;
-    private RangePolicyFixedViewport yPolicy;
+//    private static Chart2D staticChart;
+//    private Chart2D chart;
+//    private ADataCollector tempCollector;
+//    private IAxis axisX;
+//    private IAxis axisY;
+//    
+//    private Range yRangeCelsius;
+//    private Range yRangeFarenheit;
+//    private ITrace2D trace;
+   private JFrame frame;
+//    private RangePolicyFixedViewport yPolicy;
     
 //    public static void main (String[] args) {
 //        Graph myDemo = new Graph();
@@ -104,63 +104,63 @@ public class Graph {
 		}
     }
 
-    void dynamicChartInit() {
-        
-        //iTrace2D implementation will notify chart 2D instance about changes 
-        trace.setColor(Color.RED);
-        trace.setName("Temperature");
-
-        // Add the trace to the chart:
-        chart.addTrace(trace);
-
-        chart.setBackground(Color.WHITE);
-        chart.setForeground(Color.BLUE);
-        chart.setGridColor(Color.GREEN);
-
-        /************Handle X Axis********************/
-        axisX = chart.getAxisX();
-        axisX.setPaintGrid(true);
-        axisX.setTitle("Time (seconds ago)");
-        
-        /***********Handle Y Axis*************************/
-        axisY = chart.getAxisY();
-        axisY.setPaintGrid(true);
-        axisY.setTitle("Temp Celsius");
-        axisY.setRangePolicy(yPolicy);
-        
-        setTempRangePolicy(axisY, yRangeCelsius);
-
-        // Starts an internal Thread that adds value to the chart
-        tempCollector = new tempDataCollectorTimeStamped(trace, 1000);
-        tempCollector.start();	
-        
-    }
-    
-    protected void stopCollector(){
-    	tempCollector.stop();    	
-    }
-    
-    protected void startCollector(){
-    	tempCollector.start();
-    }
-
-	public void setAxisCelsius() {
-        axisY.setTitle("Temp (Celsius)");	
-        setTempRangePolicy(axisY, yRangeCelsius);
-	}
-	
-	public void setAxisFarenheit(){
-		axisY.setTitle("Temp (Farenheit)");
-		setTempRangePolicy(axisY, yRangeFarenheit);
-	}
-	
-	public void setTempRangePolicy(IAxis axis, Range range){
-		axisY.setRangePolicy(new RangePolicyFixedViewport(range));
-	}
-	
-	protected void addDataPoint(double datapoint){
-		
-	}
-	
+//    void dynamicChartInit() {
+//        
+//        //iTrace2D implementation will notify chart 2D instance about changes 
+//        trace.setColor(Color.RED);
+//        trace.setName("Temperature");
+//
+//        // Add the trace to the chart:
+//        chart.addTrace(trace);
+//
+//        chart.setBackground(Color.WHITE);
+//        chart.setForeground(Color.BLUE);
+//        chart.setGridColor(Color.GREEN);
+//
+//        /************Handle X Axis********************/
+//        axisX = chart.getAxisX();
+//        axisX.setPaintGrid(true);
+//        axisX.setTitle("Time (seconds ago)");
+//        
+//        /***********Handle Y Axis*************************/
+//        axisY = chart.getAxisY();
+//        axisY.setPaintGrid(true);
+//        axisY.setTitle("Temp Celsius");
+//        axisY.setRangePolicy(yPolicy);
+//        
+//        setTempRangePolicy(axisY, yRangeCelsius);
+//
+//        // Starts an internal Thread that adds value to the chart
+//        tempCollector = new tempDataCollectorTimeStamped(trace, 1000);
+//        tempCollector.start();	
+//        
+//    }
+//    
+//    protected void stopCollector(){
+//    	tempCollector.stop();    	
+//    }
+//    
+//    protected void startCollector(){
+//    	tempCollector.start();
+//    }
+//
+//	public void setAxisCelsius() {
+//        axisY.setTitle("Temp (Celsius)");	
+//        setTempRangePolicy(axisY, yRangeCelsius);
+//	}
+//	
+//	public void setAxisFarenheit(){
+//		axisY.setTitle("Temp (Farenheit)");
+//		setTempRangePolicy(axisY, yRangeFarenheit);
+//	}
+//	
+//	public void setTempRangePolicy(IAxis axis, Range range){
+//		axisY.setRangePolicy(new RangePolicyFixedViewport(range));
+//	}
+//	
+//	protected void addDataPoint(double datapoint){
+//		
+//	}
+//	
 	
 }
