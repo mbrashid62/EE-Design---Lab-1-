@@ -46,6 +46,7 @@ public class SerialComm implements SerialPortEventListener {
 				Thread.sleep(2000);
 			} catch (InterruptedException ie) {
 			}
+			this.sendData('T');
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -82,12 +83,12 @@ public class SerialComm implements SerialPortEventListener {
 					input = new BufferedReader(new InputStreamReader(serialPort.getInputStream()));
 
 				}
+				inputLine ="";
 				for (int i = 0; i < 6; i++) {
 					inputLine += (char) input.read();
 				}
 				dataSent = true;
 				break;
-
 			default:
 				break;
 			}
@@ -105,7 +106,7 @@ public class SerialComm implements SerialPortEventListener {
 		if(dataSent) {
 			return inputLine;
 		}
-		return "wait";
+		return "19.0";
 	}
 
 	public SerialComm() {

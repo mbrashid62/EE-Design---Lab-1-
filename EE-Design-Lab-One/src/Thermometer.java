@@ -41,6 +41,8 @@ public class Thermometer {
 	private final String defaultNumber = "+13198559324";
 	private SerialComm communication;
 	private boolean connection;
+	private JTextArea textArea;
+	private GoThread collector;
 
 	//private Graph tempGraph;
 
@@ -73,6 +75,7 @@ public class Thermometer {
 	 * Initialize the contents of the frame.
 	 */
 	private void initializeGui() {
+		JOptionPane.showMessageDialog(null, "Default tartget number: +13198559324\nDefault Min Temperature: -10.0 C \u00BA\nDefault Max Temperature: 63.0 C \u00BA");
 		isCelsius = true;
 	//	hasGraphBeenInit = false;
 		frame = new JFrame();
@@ -118,6 +121,7 @@ public class Thermometer {
 					targetNumber = textField.getText();
 					try {
 						Alert = new Texter(targetNumber);
+						JOptionPane.showMessageDialog(null, "New Target number: +1"+targetNumber);
 					} catch (TwilioRestException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -160,7 +164,7 @@ public class Thermometer {
 		textField_2.setBounds(177, 95, 60, 24);
 		frame.getContentPane().add(textField_2);
 		textField_2.setColumns(10);
-
+        
 		communication = new SerialComm();
 		
 		  try { 
@@ -194,12 +198,12 @@ public class Thermometer {
 					} else {
 						maxTemp = a;
 						minTemp = b;
+						JOptionPane.showMessageDialog(null, "Temperature Alert Settings Updated!");
 					}
 				}
 
 			}
 		});
-		System.out.print(targetNumber);
 		btnNewButton.setBounds(270, 96, 77, 23);
 		frame.getContentPane().add(btnNewButton);
 
@@ -257,7 +261,7 @@ public class Thermometer {
 		frame.getContentPane().add(panel);
 		panel.setLayout(null);
 
-		JTextArea textArea = new JTextArea();
+		textArea = new JTextArea();
 		textArea.setEditable(false);
 		textArea.setBounds(0, 0, 299, 134);
 		panel.add(textArea);
@@ -269,6 +273,8 @@ public class Thermometer {
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				onGoing = true;
+				collector = new GoThread();
+				collector.start();
 			/*	if (!hasGraphBeenInit) {
 					tempGraph = new Graph();
 					hasGraphBeenInit = true;
@@ -278,60 +284,7 @@ public class Thermometer {
 
 				//	System.out.println("In here");*/
 
-					while (onGoing) {
-
-						if (!connection) {
-							JOptionPane.showMessageDialog(null, "Serial Communication offline! re-connecting...");
-						}
-
-						while (!connection) {
-							connection = communication.initialize();
-						}
-						
-						communication.sendData('T');
-						String InputReading = "";
-						
-                        while(communication.getTemperature()=="wait") {
-                        	InputReading = communication.getTemperature();
-                        	System.out.println("show me");
-                        }
-                        
-						communication.dataReset();   
-						try {
-							Thread.sleep(1000);
-						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-                        System.out.println("InputReading: " + InputReading);
-                        
-						/*** get temp from arduino **/
-						double currentTemp = Double.parseDouble(InputReading);
-						
-						System.out.println("before sendData()");
-
-	//					tempGraph.sendData(currentTemp);
-						if(!Alert.isAlerted()) {
-							if (currentTemp < minTemp) {
-								Alert.LowTempAlert();
-							} else if (currentTemp > maxTemp) {
-								Alert.HighTempAlert();
-							}
-						} else {
-							if(currentTemp >= minTemp&&currentTemp <= maxTemp) {
-	                        	Alert.Reset();
-	                        }
-						}
-						
-						if (isCelsius) {
-							textArea.setText("" + currentTemp);
-						} else {
-							textArea.setText("" + CtoF(currentTemp));
-						}
-
-						
-
-					}
+					
 				}
 
 			//}
@@ -347,6 +300,7 @@ public class Thermometer {
 			public void actionPerformed(ActionEvent arg0) {
 				onGoing = false;
 //				tempGraph.stopCollector();
+				collector = null;
 				textArea.setText("");
 			}
 		});
@@ -363,5 +317,61 @@ public class Thermometer {
 		F = 9 * C / 5 + 32;
 		return F;
 	}
+	
+	private class GoThread extends Thread {
+		
+		public GoThread() {
+		}
+		
+		public void run() {
+			while (onGoing) {
+
+				if (!connection) {
+					JOptionPane.showMessageDialog(null, "Serial Communication offline! re-connecting...");
+				}
+
+				while (!connection) {
+					connection = communication.initialize();
+				}
+				
+				communication.sendData('T');
+				String InputReading = "";
+				 
+	            InputReading = communication.getTemperature();        
+	            
+				communication.dataReset();   
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				/*** get temp from arduino **/
+				double currentTemp = Double.parseDouble(InputReading);
+				
+//						tempGraph.sendData(currentTemp);
+				if(!Alert.isAlerted()) {
+					if (currentTemp < minTemp) {
+						Alert.LowTempAlert();
+					} else if (currentTemp > maxTemp) {
+						Alert.HighTempAlert();
+					}
+				} else {
+					if(currentTemp >= minTemp&&currentTemp <= maxTemp) {
+	                	Alert.Reset();
+	                }
+				}
+				
+				if (isCelsius) {
+					textArea.setText("" + currentTemp);
+				} else {
+					textArea.setText("" + CtoF(currentTemp));
+				}			        
+			}
+			textArea.setText("");
+		}
+		
+	}
+	
 
 }
