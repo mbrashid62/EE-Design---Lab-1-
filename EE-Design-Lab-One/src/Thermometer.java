@@ -198,7 +198,7 @@ public class Thermometer {
 					} else {
 						maxTemp = a;
 						minTemp = b;
-						JOptionPane.showMessageDialog(null, "Temperature Alert Settings Updated!");
+						JOptionPane.showMessageDialog(null, "Temperature Alert Settings Updated!\nMin Temperature: "+minTemp+"\nMax Temperature: "+maxTemp);
 					}
 				}
 
