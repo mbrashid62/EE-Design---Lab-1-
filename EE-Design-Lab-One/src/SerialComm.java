@@ -5,6 +5,7 @@ import gnu.io.SerialPortEventListener;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.util.Enumeration;
 
 /**
  * @author Yujun Huang
@@ -24,7 +25,7 @@ public class SerialComm implements SerialPortEventListener {
 		try {
 			CommPortIdentifier portId = null;
 			
-			java.util.Enumeration<CommPortIdentifier> portEnum = CommPortIdentifier.getPortIdentifiers();
+			Enumeration<CommPortIdentifier> portEnum = CommPortIdentifier.getPortIdentifiers();
 	        while ( portEnum.hasMoreElements() ) 
 	        {
 	            CommPortIdentifier portIdentifier = portEnum.nextElement();
