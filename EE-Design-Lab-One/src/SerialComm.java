@@ -11,7 +11,7 @@ import java.io.OutputStream;
  */
 public class SerialComm implements SerialPortEventListener {
 	SerialPort serialPort = null;
-	private static final String PORT_NAME = "COM4";
+	private static final String PORT_NAME = "COM5";
 
 	private String appName;
 	private BufferedReader input;
