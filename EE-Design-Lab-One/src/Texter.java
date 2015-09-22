@@ -40,6 +40,7 @@ public class Texter {
 			params.add(new BasicNameValuePair("Body", "The temperature is now over the max temperature limit !"));
 			MessageFactory messageFactory = client.getAccount().getMessageFactory();
 			try {
+				@SuppressWarnings("unused")
 				Message message = messageFactory.create(params);
 			} catch (TwilioRestException e) {
 				// TODO Auto-generated catch block

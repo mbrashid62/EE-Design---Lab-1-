@@ -24,25 +24,22 @@ public class SerialComm implements SerialPortEventListener {
 	public boolean initialize() {
 		try {
 			CommPortIdentifier portId = null;
-			
+
+			@SuppressWarnings("unchecked")
 			Enumeration<CommPortIdentifier> portEnum = CommPortIdentifier.getPortIdentifiers();
-	        while ( portEnum.hasMoreElements() ) 
-	        {
-	            CommPortIdentifier portIdentifier = portEnum.nextElement();
-	            switch ( portIdentifier.getPortType() )
-		        {
-		            case CommPortIdentifier.PORT_SERIAL:
-		            	portId = portIdentifier;
-		            break;
-		            default:
-		            break;
-		        }
-	        }   
+			while (portEnum.hasMoreElements()) {
+				CommPortIdentifier portIdentifier = portEnum.nextElement();
+				if (portIdentifier.getPortType() == CommPortIdentifier.PORT_SERIAL) {
+
+					portId = portIdentifier;
+
+				}
+			}
 			serialPort = (SerialPort) portId.open(appName, TIME_OUT);
 			if (portId == null || serialPort == null) {
 				return false;
 			}
-			
+
 			dataSent = false;
 			// set port parameters
 			serialPort.setSerialPortParams(DATA_RATE, SerialPort.DATABITS_8, SerialPort.STOPBITS_1,
@@ -73,6 +70,7 @@ public class SerialComm implements SerialPortEventListener {
 			System.exit(0);
 		}
 	}
+
 	// This should be called when you stop using the port
 	//
 	public synchronized void close() {
@@ -94,7 +92,7 @@ public class SerialComm implements SerialPortEventListener {
 					input = new BufferedReader(new InputStreamReader(serialPort.getInputStream()));
 
 				}
-				inputLine ="";
+				inputLine = "";
 				for (int i = 0; i < 6; i++) {
 					inputLine += (char) input.read();
 				}
@@ -107,14 +105,14 @@ public class SerialComm implements SerialPortEventListener {
 			System.err.println(e.toString());
 		}
 	}
-	
+
 	public void dataReset() {
 		inputLine = "";
 		dataSent = false;
 	}
 
 	public String getTemperature() {
-		if(dataSent) {
+		if (dataSent) {
 			return inputLine;
 		}
 		return "19.0";
