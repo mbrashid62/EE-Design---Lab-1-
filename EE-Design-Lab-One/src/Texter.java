@@ -17,36 +17,51 @@ public class Texter {
 	private static final String AUTH_TOKEN = "bd4606c770ff522f9a179003fb845557";
 	private TwilioRestClient client = new TwilioRestClient(ACCOUNT_SID, AUTH_TOKEN);
 	private List<NameValuePair> params = new ArrayList<NameValuePair>();
+	private boolean TextSent;
 
 	public Texter(String phoneNumber) throws TwilioRestException {
 
 		// Build the parameters
 		params.add(new BasicNameValuePair("To", phoneNumber));
 		params.add(new BasicNameValuePair("From", "+13197746240"));
+		TextSent = false;
 
+	}
+	
+	public void Reset() {
+		TextSent = false;
+	}
+	public boolean isAlerted() {
+		return TextSent;
 	}
 
 	public void HighTempAlert() {
-
-		params.add(new BasicNameValuePair("Body", "The temperature is now over the max temperature limit !"));
-		MessageFactory messageFactory = client.getAccount().getMessageFactory();
-		try {
-			Message message = messageFactory.create(params);
-		} catch (TwilioRestException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		while (!TextSent) {
+			params.add(new BasicNameValuePair("Body", "The temperature is now over the max temperature limit !"));
+			MessageFactory messageFactory = client.getAccount().getMessageFactory();
+			try {
+				Message message = messageFactory.create(params);
+			} catch (TwilioRestException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			TextSent = true;
 		}
+
 	}
 
 	public void LowTempAlert() {
-
-		params.add(new BasicNameValuePair("Body", "The temperature is now below the min temperature limit !"));
-		MessageFactory messageFactory = client.getAccount().getMessageFactory();
-		try {
-			Message message = messageFactory.create(params);
-		} catch (TwilioRestException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		while (!TextSent) {
+			params.add(new BasicNameValuePair("Body", "The temperature is now below the min temperature limit !"));
+			MessageFactory messageFactory = client.getAccount().getMessageFactory();
+			try {
+				Message message = messageFactory.create(params);
+			} catch (TwilioRestException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			TextSent = true;
 		}
+
 	}
 }

@@ -11,12 +11,13 @@ import java.io.OutputStream;
  */
 public class SerialComm implements SerialPortEventListener {
 	SerialPort serialPort = null;
-	private static final String PORT_NAME = "COM6";
+	private static final String PORT_NAME = "COM4";
 
 	private String appName;
 	private BufferedReader input;
 	private OutputStream output;
 	private String inputLine = "";
+	private boolean dataSent;
 
 	private static final int TIME_OUT = 1000; // Port open timeout
 	private static final int DATA_RATE = 9600; // Arduino serial port
@@ -30,6 +31,8 @@ public class SerialComm implements SerialPortEventListener {
 			if (portId == null || serialPort == null) {
 				return false;
 			}
+			
+			dataSent = false;
 			// set port parameters
 			serialPort.setSerialPortParams(DATA_RATE, SerialPort.DATABITS_8, SerialPort.STOPBITS_1,
 					SerialPort.PARITY_NONE);
@@ -79,10 +82,10 @@ public class SerialComm implements SerialPortEventListener {
 					input = new BufferedReader(new InputStreamReader(serialPort.getInputStream()));
 
 				}
-				inputLine = "";
 				for (int i = 0; i < 6; i++) {
 					inputLine += (char) input.read();
 				}
+				dataSent = true;
 				break;
 
 			default:
@@ -92,9 +95,17 @@ public class SerialComm implements SerialPortEventListener {
 			System.err.println(e.toString());
 		}
 	}
+	
+	public void dataReset() {
+		inputLine = "";
+		dataSent = false;
+	}
 
 	public String getTemperature() {
-		return inputLine;
+		if(dataSent) {
+			return inputLine;
+		}
+		return "wait";
 	}
 
 	public SerialComm() {

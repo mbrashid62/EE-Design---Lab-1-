@@ -36,13 +36,13 @@ public class Thermometer {
 	private double maxTemp;
 	private boolean onGoing;
 	private boolean isCelsius;
-	private boolean hasGraphBeenInit;
+//	private boolean hasGraphBeenInit;
 	private Texter Alert;
 	private final String defaultNumber = "+13198559324";
 	private SerialComm communication;
 	private boolean connection;
 
-	private Graph tempGraph;
+	//private Graph tempGraph;
 
 	/**
 	 * Launch the application.
@@ -74,7 +74,7 @@ public class Thermometer {
 	 */
 	private void initializeGui() {
 		isCelsius = true;
-		hasGraphBeenInit = false;
+	//	hasGraphBeenInit = false;
 		frame = new JFrame();
 		frame.getContentPane().setBackground(new Color(102, 204, 204));
 		frame.getContentPane().setForeground(new Color(0, 0, 0));
@@ -209,7 +209,7 @@ public class Thermometer {
 		rdbtnC.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				isCelsius = true;
-				tempGraph.setAxisCelsius();
+	//			tempGraph.setAxisCelsius();
 
 			}
 		});
@@ -223,7 +223,7 @@ public class Thermometer {
 		rdbtnF.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				isCelsius = false;
-				tempGraph.setAxisFarenheit();
+	//			tempGraph.setAxisFarenheit();
 			}
 		});
 		rdbtnF.setBackground(new Color(102, 204, 204));
@@ -269,15 +269,14 @@ public class Thermometer {
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				onGoing = true;
-
-				if (!hasGraphBeenInit) {
+			/*	if (!hasGraphBeenInit) {
 					tempGraph = new Graph();
 					hasGraphBeenInit = true;
-					System.out.println("In first if");
+				//	System.out.println("In first if");
 				}
 				if (hasGraphBeenInit == true) {
 
-					System.out.println("In here");
+				//	System.out.println("In here");*/
 
 					while (onGoing) {
 
@@ -290,8 +289,14 @@ public class Thermometer {
 						}
 						
 						communication.sendData('T');
-
-						String InputReading = communication.getTemperature();
+						String InputReading = "";
+						
+                        while(communication.getTemperature()=="wait") {
+                        	InputReading = communication.getTemperature();
+                        	System.out.println("show me");
+                        }
+                        
+						communication.dataReset();   
 						try {
 							Thread.sleep(1000);
 						} catch (InterruptedException e) {
@@ -305,14 +310,19 @@ public class Thermometer {
 						
 						System.out.println("before sendData()");
 
-						tempGraph.sendData(currentTemp);
-
-						if (currentTemp < minTemp) {
-							Alert.LowTempAlert();
-						} else if (currentTemp > maxTemp) {
-							Alert.HighTempAlert();
+	//					tempGraph.sendData(currentTemp);
+						if(!Alert.isAlerted()) {
+							if (currentTemp < minTemp) {
+								Alert.LowTempAlert();
+							} else if (currentTemp > maxTemp) {
+								Alert.HighTempAlert();
+							}
+						} else {
+							if(currentTemp >= minTemp&&currentTemp <= maxTemp) {
+	                        	Alert.Reset();
+	                        }
 						}
-
+						
 						if (isCelsius) {
 							textArea.setText("" + currentTemp);
 						} else {
@@ -324,7 +334,7 @@ public class Thermometer {
 					}
 				}
 
-			}
+			//}
 		});
 		btnNewButton_1.setFont(new Font("Tahoma", Font.BOLD, 11));
 		btnNewButton_1.setBackground(new Color(153, 255, 255));
@@ -336,7 +346,7 @@ public class Thermometer {
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				onGoing = false;
-				tempGraph.stopCollector();
+//				tempGraph.stopCollector();
 				textArea.setText("");
 			}
 		});
