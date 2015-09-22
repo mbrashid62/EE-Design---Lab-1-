@@ -11,23 +11,33 @@ import java.io.OutputStream;
  */
 public class SerialComm implements SerialPortEventListener {
 	SerialPort serialPort = null;
-	private static final String PORT_NAME = "COM4";
-
 	private String appName;
 	private BufferedReader input;
 	private OutputStream output;
 	private String inputLine = "";
 	private boolean dataSent;
 
-	private static final int TIME_OUT = 1000; // Port open timeout
+	private static final int TIME_OUT = 2000; // Port open timeout
 	private static final int DATA_RATE = 9600; // Arduino serial port
 
 	public boolean initialize() {
 		try {
 			CommPortIdentifier portId = null;
-			CommPortIdentifier currPortId = CommPortIdentifier.getPortIdentifier(PORT_NAME);
-			serialPort = (SerialPort) currPortId.open(appName, TIME_OUT);
-			portId = currPortId;
+			
+			java.util.Enumeration<CommPortIdentifier> portEnum = CommPortIdentifier.getPortIdentifiers();
+	        while ( portEnum.hasMoreElements() ) 
+	        {
+	            CommPortIdentifier portIdentifier = portEnum.nextElement();
+	            switch ( portIdentifier.getPortType() )
+		        {
+		            case CommPortIdentifier.PORT_SERIAL:
+		            	portId = portIdentifier;
+		            break;
+		            default:
+		            break;
+		        }
+	        }   
+			serialPort = (SerialPort) portId.open(appName, TIME_OUT);
 			if (portId == null || serialPort == null) {
 				return false;
 			}
