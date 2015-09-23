@@ -73,8 +73,11 @@ public class Thermometer {
 	/** The collector. */
 	private GoThread collector;
 
-	// private Graph tempGraph;
-
+	private Graph graph;
+	
+	private Boolean anyError;
+	
+	private Boolean hasRTGraphOpened;
 	/**
 	 * Launch the application.
 	 *
@@ -108,9 +111,8 @@ public class Thermometer {
 	 */
 	private void initializeGui() {
 		JOptionPane.showMessageDialog(null,
-				"Default tartget number: +13198559324\nDefault Min Temperature: -10.0 C \u00BA\nDefault Max Temperature: 63.0 C \u00BA");
+				"Default target number: +13198559324\nDefault Min Temperature: -10.0 C \u00BA\nDefault Max Temperature: 63.0 C \u00BA");
 		isCelsius = true;
-		// hasGraphBeenInit = false;
 		frmThermometer = new JFrame();
 		frmThermometer.setFont(new Font("Dialog", Font.ITALIC, 18));
 		frmThermometer.setTitle("Thermometer");
@@ -119,6 +121,11 @@ public class Thermometer {
 		frmThermometer.setBounds(100, 100, 387, 376);
 		frmThermometer.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmThermometer.getContentPane().setLayout(null);
+		
+		anyError = false;
+		hasRTGraphOpened = false;
+		//Graph instantiation
+		setGraph(new Graph());
 
 		JLabel lblTextMessageAlert = new JLabel("Text Message Alert");
 		lblTextMessageAlert.setBounds(0, 0, 347, 22);
@@ -317,17 +324,12 @@ public class Thermometer {
 				onGoing = true;
 				collector = new GoThread();
 				collector.start();
-				/*
-				 * if (!hasGraphBeenInit) { tempGraph = new Graph();
-				 * hasGraphBeenInit = true; // System.out.println("In first if"
-				 * ); } if (hasGraphBeenInit == true) {
-				 * 
-				 * // System.out.println("In here");
-				 */
-
+				
+				if(!hasRTGraphOpened){
+			    	graph.openGraph();
+				}
+		    	hasRTGraphOpened = true;
 			}
-
-			// }
 		});
 		btnNewButton_1.setFont(new Font("Tahoma", Font.BOLD, 11));
 		btnNewButton_1.setBackground(new Color(153, 255, 255));
@@ -339,7 +341,6 @@ public class Thermometer {
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				onGoing = false;
-				// tempGraph.stopCollector();
 				collector = null;
 				textArea.setText("");
 			}
@@ -363,6 +364,14 @@ public class Thermometer {
 		double F = 0;
 		F = 9 * C / 5 + 32;
 		return F;
+	}
+
+	public Graph getGraph() {
+		return graph;
+	}
+
+	public void setGraph(Graph graph) {
+		this.graph = graph;
 	}
 
 	/**
@@ -402,7 +411,10 @@ public class Thermometer {
 				/*** get temp from arduino **/
 				double currentTemp = Double.parseDouble(InputReading);
 
-				// tempGraph.sendData(currentTemp);
+				if(connection == false){
+					anyError = true;
+				}
+				graph.sendToGraph(currentTemp, anyError);
 
 				// send message only once before the current temperature goes
 				// from out of setting range back to the range
