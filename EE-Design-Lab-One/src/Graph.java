@@ -11,11 +11,19 @@ import java.io.IOException;
 import javax.swing.JFrame;
 
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Graph.
+ */
 public class Graph {
 
 	
+   /** The frame. */
    private JFrame frame;
 
+    /**
+     * Instantiates a new graph class.
+     */
     public Graph(){
     
     	 try {
@@ -28,6 +36,11 @@ public class Graph {
 
     }
     
+    /**
+     * Send data.
+     *
+     * @param temp the temp
+     */
     void sendData(double temp){
     	 //write data to file
 		try {

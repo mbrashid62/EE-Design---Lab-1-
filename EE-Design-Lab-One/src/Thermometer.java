@@ -21,6 +21,7 @@ import java.awt.event.ItemListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JPanel;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class Thermometer interface.
  */
