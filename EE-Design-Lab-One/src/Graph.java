@@ -76,7 +76,7 @@ public class Graph {
 			//concatenate all array contents and add array brackets for subsequent file write
 			jsonToSend =  "[" + addArrayToString(jsonElements) + "]";
 			//check
-			System.out.println("jsonToSend: " + jsonToSend);
+//			System.out.println("jsonToSend: " + jsonToSend);
 			
 
 			File file = new File("H://Lab_One/temps/temps.json");
@@ -91,7 +91,7 @@ public class Graph {
 			bw.write(jsonToSend);
 			bw.close();
 
-			System.out.println("Done writing to file");
+//			System.out.println("Done writing to file");
 
 			secondTracker++;
 		} catch (IOException e) {
