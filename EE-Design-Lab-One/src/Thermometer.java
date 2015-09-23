@@ -76,7 +76,7 @@ public class Thermometer {
 	private Graph graph;
 	
 	private Boolean anyError;
-	
+			
 	private Boolean hasRTGraphOpened;
 	/**
 	 * Launch the application.
@@ -110,6 +110,7 @@ public class Thermometer {
 	 * Initialize the contents of the frame.
 	 */
 	private void initializeGui() {
+		
 		JOptionPane.showMessageDialog(null,
 				"Default target number: +13198559324\nDefault Min Temperature: -10.0 C \u00BA\nDefault Max Temperature: 63.0 C \u00BA");
 		isCelsius = true;
@@ -121,7 +122,7 @@ public class Thermometer {
 		frmThermometer.setBounds(100, 100, 387, 376);
 		frmThermometer.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmThermometer.getContentPane().setLayout(null);
-		
+	
 		anyError = false;
 		hasRTGraphOpened = false;
 		//Graph instantiation
@@ -440,5 +441,7 @@ public class Thermometer {
 		}
 
 	}
+	
+
 
 }

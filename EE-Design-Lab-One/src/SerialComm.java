@@ -3,6 +3,7 @@ import gnu.io.SerialPort;
 import gnu.io.SerialPortEvent;
 import gnu.io.SerialPortEventListener;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.Enumeration;
@@ -106,8 +107,19 @@ public class SerialComm implements SerialPortEventListener {
 	 */
 	//
 	public synchronized void close() {
+		
+		System.out.println("IN CLOSE");
 		if (serialPort != null) {
+			try {
+				input.close();
+				output.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 			serialPort.removeEventListener();
+			
 			serialPort.close();
 		}
 	}

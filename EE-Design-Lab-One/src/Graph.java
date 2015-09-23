@@ -51,10 +51,8 @@ public class Graph {
     	 //write data to file
 		try {
 
-			System.out.println("Read temp: " + temp);
 			String jsonElement;
 			
-
 			if(secondTracker == 300){
 				secondTracker = 0;
 			}
