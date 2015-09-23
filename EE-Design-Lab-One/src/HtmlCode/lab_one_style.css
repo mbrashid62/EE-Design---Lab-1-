@@ -1,0 +1,17 @@
+@import url(https://fonts.googleapis.com/css?family=Signika);
+
+body{
+
+    background-image: url("thermometer.jpg");
+    background-repeat: repeat-y;
+}
+
+h1{
+    color: darkslategray;
+    text-align: center;
+    font-family: 'Signika', sans-serif;
+}
+
+h2{
+    text-align: center;
+}
