@@ -35,10 +35,10 @@ public class ArduinoTest1 implements SerialPortEventListener {
             
             System.out.println( "Connected on port" + currPortId.getName() );
             
-            if (portId == null || serialPort == null) {
-                System.out.println("Oops... Could not connect to Arduino");
-                return false;
-            }
+			if (portId == null || serialPort == null) {
+				System.out.println("Oops... Could not connect to Arduino");
+				return false;
+			}
         
             // set port parameters
             serialPort.setSerialPortParams(DATA_RATE,
@@ -121,7 +121,11 @@ public class ArduinoTest1 implements SerialPortEventListener {
     
     public static void main(String[] args) throws Exception {
         ArduinoTest1 test = new ArduinoTest1();
-        if ( test.initialize() ) {
+        boolean connect = test.initialize();
+        if ( connect ) {
+        	while(!connect) {
+        		System.out.println("");
+        	}
             test.sendData('T');
             try { Thread.sleep(2000); } catch (InterruptedException ie) {}
            
